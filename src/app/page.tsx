@@ -1,65 +1,78 @@
-import Image from "next/image";
+import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import MCStatus from "@/components/mc/MCStatus";
+import { Shield, Map, Zap } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-white pt-16 pb-32">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.slate.100),white)]" />
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="flex justify-center mb-8">
+              <MCStatus />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl font-mono">
+              欢迎来到 <br />
+              <span className="text-[#2D932D]">坩埚服</span> 生存服务器
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-slate-600">
+              这里是记录伟大建筑、交流生电技术、分享生存点滴的社区。
+              加入我们，一起探索无限可能。
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link
+                href="/archives"
+                className="rounded-md bg-[#2D932D] px-6 py-3 text-lg font-bold text-white shadow-[4px_4px_0px_0px_#1a5a1a] transition-all hover:bg-[#257a25] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+              >
+                探索建筑档案
+              </Link>
+              <Link href="/about" className="text-sm font-semibold leading-6 text-slate-900">
+                了解更多 <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-24 bg-slate-50">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
+            <FeatureCard
+              icon={<Shield className="h-6 w-6 text-[#2D932D]" />}
+              title="正版验证"
+              description="绑定 Minecraft 正版账号，确保社区环境纯净，每个玩家都有真实身份。"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <FeatureCard
+              icon={<Map className="h-6 w-6 text-[#00AAAA]" />}
+              title="建筑与坐标"
+              description="精准记录服务器内每一个宏伟建筑和生电机器的坐标与维度信息。"
+            />
+            <FeatureCard
+              icon={<Zap className="h-6 w-6 text-amber-500" />}
+              title="实时状态"
+              description="随时随地查看服务器 TPS、在线人数及玩家动态，掌握服务器第一手资料。"
+            />
+          </div>
         </div>
-      </main>
+      </section>
+    </main>
+  );
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="relative flex flex-col gap-4 p-8 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 border border-slate-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)]">
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold text-slate-900 font-mono">{title}</h3>
+      <p className="text-slate-600 leading-relaxed">{description}</p>
     </div>
   );
 }
