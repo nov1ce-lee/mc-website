@@ -23,7 +23,7 @@ export async function DELETE(
       return NextResponse.json({ error: "回复不存在" }, { status: 404 });
     }
 
-    if (reply.authorId !== session.user.id && session.user.role !== "ADMIN") {
+    if (reply.authorId !== session.user.id && session.user.role !== "ADMIN" && session.user.role !== "OWNER") {
       return NextResponse.json({ error: "无权删除此回复" }, { status: 403 });
     }
 

@@ -45,6 +45,9 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    const userCount = await prisma.user.count();
+    const role = userCount === 0 ? "OWNER" : "USER";
+
     const user = await prisma.user.create({
       data: {
         email,
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
         image: getAvatarUrl(minecraftUUID, 64),
         minecraftUUID,
         minecraftName,
-        role: "USER",
+        role,
       },
     });
 

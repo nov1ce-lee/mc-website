@@ -44,7 +44,7 @@ model User {
   password        String?
   emailVerified   DateTime?
   image           String?
-  role            String    @default("USER") // USER, ADMIN
+  role            String    @default("USER") // USER, ADMIN, OWNER
   minecraftUUID   String?   @unique
   minecraftName   String?
   createdAt       DateTime  @default(now())

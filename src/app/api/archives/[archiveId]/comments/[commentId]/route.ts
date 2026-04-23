@@ -23,7 +23,7 @@ export async function DELETE(
       return NextResponse.json({ error: "评论不存在" }, { status: 404 });
     }
 
-    if (comment.authorId !== session.user.id && session.user.role !== "ADMIN") {
+    if (comment.authorId !== session.user.id && session.user.role !== "ADMIN" && session.user.role !== "OWNER") {
       return NextResponse.json({ error: "无权删除此评论" }, { status: 403 });
     }
 

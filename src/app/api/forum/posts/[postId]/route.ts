@@ -68,7 +68,7 @@ export async function DELETE(
       return NextResponse.json({ error: "帖子不存在" }, { status: 404 });
     }
 
-    if (post.authorId !== session.user.id && session.user.role !== "ADMIN") {
+    if (post.authorId !== session.user.id && session.user.role !== "ADMIN" && session.user.role !== "OWNER") {
       return NextResponse.json({ error: "无权删除此帖子" }, { status: 403 });
     }
 

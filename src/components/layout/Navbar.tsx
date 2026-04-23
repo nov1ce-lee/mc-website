@@ -37,7 +37,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           {session ? (
             <div className="flex items-center gap-3">
-              {session.user?.role === "ADMIN" && (
+              {(session.user?.role === "ADMIN" || session.user?.role === "OWNER") && (
                 <Link
                   href="/admin"
                   className="p-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors rounded-lg"

@@ -43,7 +43,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
-    } else if (session?.user?.role !== "ADMIN") {
+    } else if (session?.user?.role !== "ADMIN" && session?.user?.role !== "OWNER") {
       router.push("/");
     }
   }, [status, session, router]);
@@ -66,7 +66,7 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    if (session?.user?.role === "ADMIN") {
+    if (session?.user?.role === "ADMIN" || session?.user?.role === "OWNER") {
       fetchAdminData();
     }
   }, [session]);
@@ -91,7 +91,7 @@ export default function AdminPage() {
   };
 
   const handleToggleUserRole = async (userId: string, currentRole: string) => {
-    const newRole = currentRole === "ADMIN" ? "USER" : "ADMIN";
+    const newRole = currentRole === "ADMIN" ? "USER" : currentRole === "USER" ? "ADMIN" : "USER";
     const action = newRole === "ADMIN" ? "提升为管理员" : "取消管理员权限";
     
     if (!confirm(`确定要${action}吗？`)) {
@@ -111,6 +111,9 @@ export default function AdminPage() {
         setUsers(users.map(u => 
           u.id === userId ? { ...u, role: newRole } : u
         ));
+      } else {
+        const data = await response.json();
+        alert(data.error || "操作失败");
       }
     } catch (error) {
       console.error("Failed to update user role:", error);
@@ -128,7 +131,7 @@ export default function AdminPage() {
     );
   }
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "OWNER")) {
     return null;
   }
 
@@ -240,16 +243,26 @@ export default function AdminPage() {
                     >
                       <div className="flex items-center gap-4">
                         <img
-                          src={`https://crafatar.com/avatars/${user.name || "steve"}?size=48&overlay`}
+                          src={`https://mc-heads.net/avatar/${user.name || "steve"}/48`}
                           alt={user.name || "用户"}
                           className="h-12 w-12 rounded-lg border border-slate-200"
                         />
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="font-bold text-slate-900">{user.name}</h3>
+                            {user.role === "OWNER" && (
+                              <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">
+                                服主
+                              </span>
+                            )}
                             {user.role === "ADMIN" && (
                               <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">
                                 管理员
+                              </span>
+                            )}
+                            {user.role === "USER" && (
+                              <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">
+                                成员
                               </span>
                             )}
                           </div>
@@ -259,16 +272,18 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleToggleUserRole(user.id, user.role)}
-                          className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors ${
-                            user.role === "ADMIN"
-                              ? "text-red-600 border-red-200 hover:bg-red-50"
-                              : "text-[#2D932D] border-[#2D932D] hover:bg-green-50"
-                          }`}
-                        >
-                          {user.role === "ADMIN" ? "取消管理员" : "设为管理员"}
-                        </button>
+                        {session?.user?.role === "OWNER" && user.role !== "OWNER" && (
+                          <button
+                            onClick={() => handleToggleUserRole(user.id, user.role)}
+                            className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors ${
+                              user.role === "ADMIN"
+                                ? "text-red-600 border-red-200 hover:bg-red-50"
+                                : "text-[#2D932D] border-[#2D932D] hover:bg-green-50"
+                            }`}
+                          >
+                            {user.role === "ADMIN" ? "取消管理员" : "设为管理员"}
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))
