@@ -23,14 +23,14 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/archives" className="text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors">
-            建筑档案
-          </Link>
-          <Link href="/forum" className="text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors">
-            社区交流
-          </Link>
           <Link href="/status" className="text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors">
             服务器状态
+          </Link>
+          <Link href="/archives" className="text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors">
+            建筑与机器档案
+          </Link>
+          <Link href="/forum" className="text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors">
+            群友唠嗑区
           </Link>
         </div>
 
@@ -51,7 +51,7 @@ export default function Navbar() {
                 className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition-colors"
               >
                 <img
-                  src={`https://crafatar.com/avatars/${session.user?.name || "steve"}?size=24&overlay`}
+                  src={`https://mc-heads.net/avatar/${session.user?.name || "steve"}/24`}
                   alt="avatar"
                   className="h-6 w-6 rounded-sm shadow-sm"
                 />

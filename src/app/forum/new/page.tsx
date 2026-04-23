@@ -83,7 +83,7 @@ export default function NewForumPostPage() {
             className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            返回社区
+            返回唠嗑区
           </Link>
         </div>
 
@@ -94,7 +94,7 @@ export default function NewForumPostPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-slate-900 font-mono">发布新帖</h1>
-              <p className="text-sm text-slate-600">在社区中发起新的讨论</p>
+              <p className="text-sm text-slate-600">在唠嗑区发个新帖</p>
             </div>
           </div>
 

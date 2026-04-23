@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import { MessageSquare, User, Calendar, Send, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -50,9 +50,10 @@ const categoryColors: Record<string, string> = {
   OFFTOPIC: "bg-slate-100 text-slate-700",
 };
 
-export default function ForumPostPage({ params }: { params: { id: string } }) {
+export default function ForumPostPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const params = useParams();
   const [post, setPost] = useState<ForumPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [replyContent, setReplyContent] = useState("");
@@ -144,6 +145,12 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
     }
   };
 
+  useEffect(() => {
+    if (params?.id) {
+      fetchPost();
+    }
+  }, [params?.id]);
+
   if (loading) {
     return (
       <main className="min-h-screen bg-slate-50">
@@ -172,7 +179,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
             className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            返回社区
+            返回唠嗑区
           </Link>
         </div>
 
@@ -201,7 +208,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
           <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <img
-                src={`https://crafatar.com/avatars/${post.author.name || "steve"}?size=32&overlay`}
+                src={`https://mc-heads.net/avatar/${post.author.name || "steve"}/32`}
                 alt={post.author.name || "用户"}
                 className="h-8 w-8 rounded-lg"
               />
@@ -236,7 +243,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
                   <div className="h-10 w-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center">
                     {session?.user?.image ? (
                       <img
-                        src={`https://crafatar.com/avatars/${session.user.name || "steve"}?size=40&overlay`}
+                        src={`https://mc-heads.net/avatar/${session.user.name || "steve"}/40`}
                         alt="avatar"
                         className="h-10 w-10 rounded-lg"
                       />
@@ -288,7 +295,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
                   <div className="flex gap-3">
                     <div className="flex-shrink-0">
                       <img
-                        src={`https://crafatar.com/avatars/${reply.author.name || "steve"}?size=40&overlay`}
+                        src={`https://mc-heads.net/avatar/${reply.author.name || "steve"}/40`}
                         alt={reply.author.name || "用户"}
                         className="h-10 w-10 rounded-lg border border-slate-200"
                       />

@@ -57,7 +57,7 @@ export default function ProfilePage() {
     if (session?.user?.id) {
       fetchUserData();
     }
-  }, [session, fetchUserData]);
+  }, [session?.user?.id]);
 
   if (status === "loading" || loading) {
     return (
@@ -84,7 +84,7 @@ export default function ProfilePage() {
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="relative">
               <img
-                src={`https://crafatar.com/avatars/${session.user?.name || "steve"}?size=128&overlay`}
+                src={`https://mc-heads.net/avatar/${session.user?.name || "steve"}/128`}
                 alt="avatar"
                 className="h-32 w-32 rounded-xl border-4 border-white shadow-lg"
               />

@@ -117,7 +117,7 @@ export default function CommentSection({ archiveId, comments, session }: Comment
               <div className="h-10 w-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center">
                 {session?.user?.image ? (
                   <img
-                    src={`https://crafatar.com/avatars/${session.user.name || "steve"}?size=40&overlay`}
+                    src={`https://mc-heads.net/avatar/${session.user.name || "steve"}/40`}
                     alt="avatar"
                     className="h-10 w-10 rounded-lg"
                   />
@@ -169,7 +169,7 @@ export default function CommentSection({ archiveId, comments, session }: Comment
               <div className="flex gap-3">
                 <div className="flex-shrink-0">
                   <img
-                    src={`https://crafatar.com/avatars/${comment.author.name || "steve"}?size=40&overlay`}
+                    src={`https://mc-heads.net/avatar/${comment.author.name || "steve"}/40`}
                     alt={comment.author.name || "用户"}
                     className="h-10 w-10 rounded-lg border border-slate-200"
                   />

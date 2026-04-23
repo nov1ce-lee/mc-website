@@ -45,7 +45,7 @@ export default function ForumPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
       const url = selectedCategory === "ALL" 
@@ -61,7 +61,7 @@ export default function ForumPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory]);
 
   useEffect(() => {
     fetchPosts();
@@ -84,8 +84,8 @@ export default function ForumPage() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 font-mono">社区交流</h1>
-            <p className="mt-2 text-slate-600">和服里的朋友们一起交流讨论</p>
+            <h1 className="text-3xl font-bold text-slate-900 font-mono">群友唠嗑区</h1>
+            <p className="mt-2 text-slate-600">服里朋友的闲聊吹水地儿</p>
           </div>
           <Link
             href="/forum/new"
@@ -160,7 +160,7 @@ export default function ForumPage() {
                   <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100">
                     <div className="flex items-center gap-2">
                       <img
-                        src={`https://crafatar.com/avatars/${post.author.name || "steve"}?size=24&overlay`}
+                        src={`https://mc-heads.net/avatar/${post.author.name || "steve"}/24`}
                         alt={post.author.name || "用户"}
                         className="h-6 w-6 rounded-sm"
                       />

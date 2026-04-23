@@ -158,11 +158,11 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
             </div>
 
             {/* 标签 */}
-            {archive.tags && archive.tags.length > 0 && (
+            {archive.tags && (() => { try { const tags = JSON.parse(archive.tags); return tags.length > 0; } catch { return false; } })() && (
               <div className="mb-8">
                 <h2 className="text-lg font-bold text-slate-900 mb-4">标签</h2>
                 <div className="flex flex-wrap gap-2">
-                  {archive.tags.map((tag: string, index: number) => (
+                  {(() => { try { return JSON.parse(archive.tags); } catch { return []; } })().map((tag: string, index: number) => (
                     <span
                       key={index}
                       className="px-3 py-1 bg-slate-100 text-slate-700 text-sm font-medium rounded-full border border-slate-200"
@@ -178,7 +178,7 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
             <div className="border-t border-slate-200 pt-8">
               <div className="flex items-center gap-4">
                 <img
-                  src={`https://crafatar.com/avatars/${archive.author.name || "steve"}?size=64&overlay`}
+                  src={`https://mc-heads.net/avatar/${archive.author.name || "steve"}/64`}
                   alt={archive.author.name || "用户"}
                   className="h-16 w-16 rounded-xl border-2 border-white shadow-sm"
                 />

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { getAvatarUrl } from "@/lib/avatar";
 
 export async function POST(request: NextRequest) {
   try {
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
         email,
         password: hashedPassword,
         name: minecraftName,
-        image: `https://crafatar.com/avatars/${minecraftUUID}?size=64&overlay`,
+        image: getAvatarUrl(minecraftUUID, 64),
         minecraftUUID,
         minecraftName,
         role: "USER",

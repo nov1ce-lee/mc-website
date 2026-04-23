@@ -9,7 +9,7 @@ interface ArchiveItem {
   coordinates: string;
   dimension: string;
   category: string;
-  images: string[];
+  images: string;
   author: { name: string | null };
   createdAt: Date;
   x: number;
@@ -28,7 +28,7 @@ export default async function ArchivesPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 font-mono">建筑与机器档案</h1>
-            <p className="mt-2 text-slate-600">记录服务器里的每一个奇迹。</p>
+            <p className="mt-2 text-slate-600">记录服里的每一个建筑和机器</p>
           </div>
           <Link
             href="/archives/new"
@@ -43,7 +43,7 @@ export default async function ArchivesPage() {
           <div className="text-center py-24 bg-white rounded-2xl border-2 border-dashed border-slate-200">
             <Box className="mx-auto h-12 w-12 text-slate-300" />
             <h3 className="mt-4 text-lg font-medium text-slate-900">目前还没有任何记录</h3>
-            <p className="mt-2 text-slate-500">快来成为第一个分享奇迹的人吧！</p>
+            <p className="mt-2 text-slate-500">快来成为第一个分享建筑和机器的人吧！</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -54,9 +54,9 @@ export default async function ArchivesPage() {
               >
                 {/* Image Placeholder or Actual Image */}
                 <div className="aspect-video bg-slate-100 relative overflow-hidden">
-                  {archive.images.length > 0 ? (
+                  {(() => { try { const imgs = JSON.parse(archive.images); return imgs.length > 0; } catch { return false; } })() ? (
                     <img
-                      src={archive.images[0]}
+                      src={(() => { try { return JSON.parse(archive.images)[0]; } catch { return ""; } })()}
                       alt={archive.title}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                     />
@@ -96,7 +96,7 @@ export default async function ArchivesPage() {
                         <span className="text-slate-400">由</span>
                         <div className="flex items-center gap-1.5 font-medium text-slate-700">
                           <img
-                            src={`https://crafatar.com/avatars/${archive.author.name || "steve"}?size=16&overlay`}
+                            src={`https://mc-heads.net/avatar/${archive.author.name || "steve"}/16`}
                             alt="author"
                             className="h-4 w-4 rounded-sm"
                           />

@@ -60,8 +60,8 @@ export default function NewArchivePage() {
         coordinates,
         dimension: formData.dimension,
         category: formData.category,
-        tags,
-        images: formData.imageUrl ? [formData.imageUrl] : [],
+        tags: JSON.stringify(tags),
+        images: formData.imageUrl ? JSON.stringify([formData.imageUrl]) : JSON.stringify([]),
       });
       router.push("/archives");
       router.refresh();

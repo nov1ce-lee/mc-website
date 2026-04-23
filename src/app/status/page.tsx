@@ -11,6 +11,7 @@ export default function StatusPage() {
   const { data, error, isLoading, mutate } = useSWR("/api/mc/status", fetcher, {
     refreshInterval: 30000,
   });
+  const { data: addressData } = useSWR("/api/mc/address", fetcher);
 
   const isOnline = data?.online;
 
@@ -97,7 +98,7 @@ export default function StatusPage() {
                           className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200"
                         >
                           <img
-                            src={`https://crafatar.com/avatars/${player.name_clean || player.name}?size=24&overlay`}
+                            src={`https://mc-heads.net/avatar/${player.name_clean || player.name}/24`}
                             alt={player.name_clean || player.name}
                             className="h-6 w-6 rounded-sm"
                           />
@@ -172,7 +173,7 @@ export default function StatusPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
               <p className="text-sm text-slate-600 mb-1">服务器地址</p>
-              <p className="text-lg font-bold font-mono text-slate-900">mc.guoguo.com</p>
+              <p className="text-lg font-bold font-mono text-slate-900">{addressData?.address || "加载中..."}</p>
             </div>
             <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
               <p className="text-sm text-slate-600 mb-1">游戏版本</p>

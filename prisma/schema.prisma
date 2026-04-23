@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 // NextAuth models
@@ -16,12 +16,12 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
+  refresh_token      String?
+  access_token       String?
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?  @db.Text
+  id_token           String?
   session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -68,12 +68,12 @@ model VerificationToken {
 model Archive {
   id          String   @id @default(cuid())
   title       String
-  description String   @db.Text
+  description String   // @db.Text removed for SQLite
   coordinates String   // e.g. "x: 100, y: 64, z: -200"
   dimension   String   @default("OVERWORLD") // OVERWORLD, NETHER, END
   category    String   // BUILDING, MACHINE, FARM, OTHERS
-  tags        String[] // Tags for categorization
-  images      String[] // URLs of images
+  tags        String   @default("") // JSON array stored as string for SQLite
+  images      String   @default("") // JSON array stored as string for SQLite
   authorId    String
   author      User     @relation(fields: [authorId], references: [id])
   createdAt   DateTime @default(now())
@@ -83,7 +83,7 @@ model Archive {
 
 model Comment {
   id        String   @id @default(cuid())
-  content   String   @db.Text
+  content   String   // @db.Text removed for SQLite
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   archiveId String
@@ -95,8 +95,8 @@ model Comment {
 model ForumPost {
   id        String       @id @default(cuid())
   title     String
-  content   String       @db.Text
-  category  String       // GENERAL, BUILDING, REDSTONE, FARM, SERVER, OFFTOPIC
+  content   String   // @db.Text removed for SQLite
+  category  String   // GENERAL, BUILDING, REDSTONE, FARM, SERVER, OFFTOPIC
   authorId  String
   author    User         @relation(fields: [authorId], references: [id])
   createdAt DateTime     @default(now())
@@ -106,7 +106,7 @@ model ForumPost {
 
 model ForumReply {
   id        String   @id @default(cuid())
-  content   String   @db.Text
+  content   String   // @db.Text removed for SQLite
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   postId    String

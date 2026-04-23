@@ -48,8 +48,8 @@ export async function POST(request: Request) {
         coordinates: coordinates || "x: 0, y: 64, z: 0",
         dimension,
         category,
-        tags: tags || [],
-        images: images || [],
+        tags: tags || "[]",
+        images: images || "[]",
         author: {
           connect: { email: session.user.email },
         },

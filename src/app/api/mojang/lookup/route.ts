@@ -51,12 +51,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         name: uuidData.name,
         uuid: formattedUUID,
-        skinUrl: `https://crafatar.com/avatars/${uuid}?size=128&overlay`,
+        skinUrl: `https://mc-heads.net/avatar/${uuid}/128`,
       });
     }
 
     const profileData = await profileResponse.json();
-    let skinUrl = `https://crafatar.com/avatars/${uuid}?size=128&overlay`;
+    let skinUrl = `https://mc-heads.net/avatar/${uuid}/128`;
 
     if (profileData.properties) {
       const texturesProp = profileData.properties.find(
