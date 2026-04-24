@@ -1,10 +1,28 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Navbar from "@/components/layout/Navbar";
 import MCStatus from "@/components/mc/MCStatus";
-import { Shield, Map, Zap, LogIn, UserPlus } from "lucide-react";
+import { Shield, Map, Zap, LogIn, UserPlus, Lock } from "lucide-react";
+
+function LoginPrompt() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
+
+  if (!callbackUrl || isLoggedIn) return null;
+
+  return (
+    <div className="mb-6 inline-flex items-center gap-2 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+      <Lock className="h-4 w-4 flex-shrink-0" />
+      请先登录后再访问该页面
+    </div>
+  );
+}
 
 export default function Home() {
   const { data: session } = useSession();
@@ -19,6 +37,9 @@ export default function Home() {
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.slate.100),white)]" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
+            <Suspense fallback={null}>
+              <LoginPrompt />
+            </Suspense>
             <div className="flex justify-center mb-8">
               <MCStatus />
             </div>

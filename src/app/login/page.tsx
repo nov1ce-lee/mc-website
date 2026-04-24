@@ -29,8 +29,7 @@ export default function LoginPage() {
       if (result?.error) {
         setError(result.error);
       } else {
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
       }
     } catch {
       setError("登录失败，请稍后重试");
