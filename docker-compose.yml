@@ -1,24 +1,18 @@
 services:
   app:
-    # 方式一：使用预构建镜像（推荐，服务器无需构建）
-    # 首次使用前先在 GitHub Actions 中构建一次
     image: ghcr.io/nov1ce-lee/mc-website:latest
-    # 方式二：本地构建（取消下面三行的注释，注释掉上面的 image 行）
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
     restart: always
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: file:./data/dev.db
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      MC_SERVER_IP: ${MC_SERVER_IP}
+      DATABASE_URL: file:/app/prisma/data/dev.db
+      NEXTAUTH_URL: http://nov1ce.top:3000
+      NEXTAUTH_SECRET: aB3dE5fG7hJ9kL1mN2oP4qR6sT8uV0wX
+      MC_SERVER_IP: 114.67.238.112:34196
     volumes:
       - sqlite_data:/app/prisma/data
     command: >
-      sh -c "mkdir -p /app/prisma/data && npx prisma db push && npm start"
+      sh -c "npx prisma db push && npm start"
 
 volumes:
   sqlite_data:
