@@ -1,9 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import Navbar from "@/components/layout/Navbar";
 import MCStatus from "@/components/mc/MCStatus";
-import { Shield, Map, Zap } from "lucide-react";
+import { Shield, Map, Zap, LogIn, UserPlus } from "lucide-react";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
+
   return (
     <main className="min-h-screen">
       <Navbar />
@@ -22,17 +28,41 @@ export default function Home() {
             <p className="mt-6 text-lg leading-8 text-slate-600">
               一群朋友的 Minecraft 小窝，记录建筑、聊聊红石、分享生存日常。
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                href="/archives"
-                className="rounded-md bg-[#2D932D] px-6 py-3 text-lg font-bold text-white shadow-[4px_4px_0px_0px_#1a5a1a] transition-all hover:bg-[#257a25] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
-              >
-                探索建筑档案
-              </Link>
-              <Link href="/about" className="text-sm font-semibold leading-6 text-slate-900">
-                了解更多 <span aria-hidden="true">→</span>
-              </Link>
-            </div>
+            {isLoggedIn ? (
+              <div className="mt-10 flex items-center justify-center gap-x-6">
+                <Link
+                  href="/archives"
+                  className="rounded-md bg-[#2D932D] px-6 py-3 text-lg font-bold text-white shadow-[4px_4px_0px_0px_#1a5a1a] transition-all hover:bg-[#257a25] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                >
+                  探索建筑档案
+                </Link>
+                <Link href="/about" className="text-sm font-semibold leading-6 text-slate-900">
+                  了解更多 <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-10 space-y-4">
+                <p className="text-base text-slate-500">
+                  登录后即可查看服务器建筑档案、参与群友唠嗑
+                </p>
+                <div className="flex items-center justify-center gap-4">
+                  <Link
+                    href="/login"
+                    className="inline-flex items-center gap-2 rounded-md bg-[#2D932D] px-6 py-3 text-base font-bold text-white shadow-[4px_4px_0px_0px_#1a5a1a] transition-all hover:bg-[#257a25] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                  >
+                    <LogIn className="h-5 w-5" />
+                    登录
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center gap-2 rounded-md bg-white px-6 py-3 text-base font-bold text-slate-700 border-2 border-slate-300 shadow-[4px_4px_0px_0px_#cbd5e1] transition-all hover:bg-slate-50 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                  >
+                    <UserPlus className="h-5 w-5" />
+                    注册
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
