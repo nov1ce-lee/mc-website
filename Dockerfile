@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 RUN apk add --no-cache python3 make g++ sqlite-dev
@@ -13,12 +13,12 @@ RUN npx prisma generate
 RUN npm run build
 
 # Stage 2: Runner
-FROM node:18-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 RUN apk add --no-cache sqlite-libs
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
