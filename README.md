@@ -99,20 +99,15 @@ pm2 save
 pm2 startup
 ```
 
-### 方式二：Docker 部署 (生产环境使用 PostgreSQL)
+### 方式二：Docker 部署
 
-项目提供了 Docker Compose 配置，生产环境使用 PostgreSQL 数据库。
+项目提供了 Docker Compose 配置，使用 SQLite 数据库，无需额外数据库服务。
 
 #### 1. 配置环境变量
 
 创建 `.env` 文件：
 
 ```env
-# PostgreSQL 数据库 (Docker 会自动创建)
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your-strong-password
-POSTGRES_DB=mc_website
-
 # NextAuth
 NEXTAUTH_URL=http://your-domain.com:3000
 NEXTAUTH_SECRET=your-random-secret-string
@@ -121,30 +116,15 @@ NEXTAUTH_SECRET=your-random-secret-string
 MC_SERVER_IP=your-server-ip:port
 ```
 
-#### 2. 修改 Prisma 数据库配置
-
-将 `prisma/schema.prisma` 中的 `provider` 从 `sqlite` 改为 `postgresql`：
-
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
-
-#### 3. 构建并启动
+#### 2. 构建并启动
 
 ```bash
 docker-compose up -d
 ```
 
-#### 4. 初始化数据库
+首次启动会自动创建数据库表，访问 `http://your-domain.com:3000` 即可。
 
-```bash
-docker-compose exec app npx prisma db push
-```
-
-访问 `http://your-domain.com:3000` 即可。
+> 数据库文件存储在 Docker 卷 `sqlite_data` 中，重启容器数据不会丢失。
 
 ### 方式三：反向代理 + HTTPS (推荐生产环境)
 
@@ -174,7 +154,7 @@ server {
 
 | 变量 | 必填 | 说明 | 示例 |
 | :--- | :--- | :--- | :--- |
-| `DATABASE_URL` | 是 | 数据库连接地址 | `file:./dev.db` (SQLite) / `postgresql://user:pass@host:5432/db` (PostgreSQL) |
+| `DATABASE_URL` | 否 | 数据库连接地址，默认 `file:./dev.db` | `file:./dev.db` |
 | `NEXTAUTH_URL` | 是 | 网站访问地址 | `http://localhost:3000` / `https://your-domain.com` |
 | `NEXTAUTH_SECRET` | 是 | JWT 加密密钥 | 随机字符串，如 `z8H3kP9mQ2rX5vB7nJ1wL4sY6cA0dF2g` |
 | `MC_SERVER_IP` | 是 | Minecraft 服务器地址 | `114.67.238.112:34196` |
@@ -185,7 +165,7 @@ server {
 | :--- | :--- |
 | 框架 | Next.js 16 (App Router) |
 | 认证 | NextAuth.js (Credentials Provider) |
-| 数据库 | SQLite (开发) / PostgreSQL (生产) |
+| 数据库 | SQLite |
 | ORM | Prisma |
 | 样式 | Tailwind CSS 4 |
 | 图标 | Lucide React |
