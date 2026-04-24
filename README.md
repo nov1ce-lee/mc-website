@@ -99,9 +99,9 @@ pm2 save
 pm2 startup
 ```
 
-### 方式二：Docker 部署
+### 方式二：Docker 部署（推荐）
 
-项目提供了 Docker Compose 配置，使用 SQLite 数据库，无需额外数据库服务。
+项目使用 GitHub Actions 自动构建 Docker 镜像并推送到 GitHub Container Registry。服务器只需拉取镜像即可运行，无需本地构建。
 
 #### 1. 配置环境变量
 
@@ -116,15 +116,32 @@ NEXTAUTH_SECRET=your-random-secret-string
 MC_SERVER_IP=your-server-ip:port
 ```
 
-#### 2. 构建并启动
+#### 2. 登录 GitHub Container Registry
 
 ```bash
-docker-compose up -d
+echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
 
-首次启动会自动创建数据库表，访问 `http://your-domain.com:3000` 即可。
+> 如果提示 `unauthorized`，需要在 GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens 创建一个 token，权限勾选 `read:packages`。
+
+#### 3. 启动
+
+```bash
+docker compose up -d
+```
+
+首次启动会自动拉取镜像并创建数据库表，访问 `http://your-domain.com:3000` 即可。
 
 > 数据库文件存储在 Docker 卷 `sqlite_data` 中，重启容器数据不会丢失。
+
+#### 更新到最新版本
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+> 每次推送代码到 `main` 分支后，GitHub Actions 会自动构建新镜像。服务器上运行上面两条命令即可更新。
 
 ### 方式三：反向代理 + HTTPS (推荐生产环境)
 

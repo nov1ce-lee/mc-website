@@ -1,8 +1,12 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # 方式一：使用预构建镜像（推荐，服务器无需构建）
+    # 首次使用前先在 GitHub Actions 中构建一次
+    image: ghcr.io/nov1ce-lee/mc-website:latest
+    # 方式二：本地构建（取消下面三行的注释，注释掉上面的 image 行）
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     restart: always
     ports:
       - "3000:3000"
