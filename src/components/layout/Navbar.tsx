@@ -58,7 +58,7 @@ export default function Navbar() {
                 <span className="text-sm font-medium text-slate-700">{session.user?.name}</span>
               </Link>
               <button
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: window.location.origin + "/" })}
                 className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors rounded-lg"
                 title="退出登录"
               >
