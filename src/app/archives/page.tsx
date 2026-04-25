@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { parseCoordinates, parseStringArray } from "@/lib/archive";
 import { resolveAvatarUrl } from "@/lib/avatar";
 
+export const dynamic = "force-dynamic";
+
 export default async function ArchivesPage() {
   const archives = await prisma.archive.findMany({
     include: {

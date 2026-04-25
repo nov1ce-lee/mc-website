@@ -1,0 +1,16 @@
+.git
+.github
+.next
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env*
+dev.db
+*.db
+coverage
+build
+out
+public/uploads
+*.tsbuildinfo

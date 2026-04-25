@@ -10,7 +10,7 @@ COPY prisma.config.ts ./
 RUN npm install
 
 COPY . .
-ENV DATABASE_URL=file:./dev.db
+ENV DATABASE_URL=file:./prisma/data/build.db
 RUN npx prisma generate
 RUN npm run build
 
@@ -19,8 +19,11 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 RUN apk add --no-cache sqlite-libs
+RUN mkdir -p /app/prisma/data /app/public/uploads/archives
 
 ENV NODE_ENV=production
+ENV DATABASE_URL=file:/app/prisma/data/dev.db
+ENV UPLOAD_DIR=/app/public/uploads/archives
 
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
@@ -32,4 +35,4 @@ COPY --from=builder /app/prisma.config.ts ./
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "DATABASE_URL=file:/app/prisma/data/dev.db npx prisma db push && npm start"]
+CMD ["sh", "-c", "mkdir -p \"$UPLOAD_DIR\" /app/prisma/data && npx prisma db push && npm start"]

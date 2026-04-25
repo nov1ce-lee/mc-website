@@ -11,6 +11,7 @@ const MIME_TO_EXTENSION: Record<string, string> = {
   "image/png": "png",
   "image/webp": "webp",
 };
+const DEFAULT_UPLOADS_DIRECTORY = join(process.cwd(), "public", "uploads", "archives");
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File is too large" }, { status: 400 });
     }
 
-    const uploadsDirectory = join(process.cwd(), "public", "uploads", "archives");
+    const uploadsDirectory = process.env.UPLOAD_DIR || DEFAULT_UPLOADS_DIRECTORY;
     await mkdir(uploadsDirectory, { recursive: true });
 
     const extension = MIME_TO_EXTENSION[file.type];

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { Calendar, Edit, Heart, MapPin, MessageSquare, Share2, Trash2, User } from "lucide-react";
+import { Calendar, Heart, MapPin, MessageSquare, Share2, User } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import CommentSection from "@/components/archive/CommentSection";
+import ArchiveActions from "@/components/archive/ArchiveActions";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseStringArray } from "@/lib/archive";
@@ -107,22 +108,7 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                {canEdit && (
-                  <>
-                    <Link
-                      href={`/archives/${archive.id}/edit`}
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#2D932D]"
-                    >
-                      <Edit className="h-4 w-4" />
-                      编辑
-                    </Link>
-                    <button className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700">
-                      <Trash2 className="h-4 w-4" />
-                      删除
-                    </button>
-                  </>
-                )}
-
+                {canEdit && <ArchiveActions archiveId={archive.id} />}
                 <button className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#2D932D]">
                   <Share2 className="h-4 w-4" />
                   分享
