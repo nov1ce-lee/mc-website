@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getAvatarUrl } from "@/lib/avatar";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -42,43 +43,10 @@ export async function GET(request: NextRequest) {
     const uuid = uuidData.id;
     const formattedUUID = `${uuid.slice(0, 8)}-${uuid.slice(8, 12)}-${uuid.slice(12, 16)}-${uuid.slice(16, 20)}-${uuid.slice(20)}`;
 
-    const profileResponse = await fetch(
-      `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`,
-      { next: { revalidate: 60 } }
-    );
-
-    if (!profileResponse.ok) {
-      return NextResponse.json({
-        name: uuidData.name,
-        uuid: formattedUUID,
-        skinUrl: `https://mc-heads.net/avatar/${uuid}/128`,
-      });
-    }
-
-    const profileData = await profileResponse.json();
-    let skinUrl = `https://mc-heads.net/avatar/${uuid}/128`;
-
-    if (profileData.properties) {
-      const texturesProp = profileData.properties.find(
-        (p: { name: string; value: string }) => p.name === "textures"
-      );
-      if (texturesProp) {
-        try {
-          const texturesData = JSON.parse(
-            Buffer.from(texturesProp.value, "base64").toString("utf-8")
-          );
-          if (texturesData.textures?.SKIN?.url) {
-            skinUrl = texturesData.textures.SKIN.url;
-          }
-        } catch {
-        }
-      }
-    }
-
     return NextResponse.json({
       name: uuidData.name,
       uuid: formattedUUID,
-      skinUrl,
+      avatarUrl: getAvatarUrl(formattedUUID, 128),
     });
   } catch (error) {
     console.error("Mojang API 查询失败:", error);

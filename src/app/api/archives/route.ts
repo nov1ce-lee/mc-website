@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { parseStringArray } from "@/lib/archive";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -40,16 +41,24 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const { title, description, coordinates, dimension, category, tags, images } = body;
+    const normalizedTitle = typeof title === "string" ? title.trim() : "";
+    const normalizedDescription = typeof description === "string" ? description.trim() : "";
+    const normalizedTags = Array.isArray(tags) ? tags : parseStringArray(tags);
+    const normalizedImages = Array.isArray(images) ? images : parseStringArray(images);
+
+    if (!normalizedTitle || !normalizedDescription) {
+      return NextResponse.json({ error: "Title and description are required" }, { status: 400 });
+    }
     
     const archive = await prisma.archive.create({
       data: {
-        title,
-        description,
+        title: normalizedTitle,
+        description: normalizedDescription,
         coordinates: coordinates || "x: 0, y: 64, z: 0",
-        dimension,
-        category,
-        tags: tags || "[]",
-        images: images || "[]",
+        dimension: dimension || "OVERWORLD",
+        category: category || "BUILDING",
+        tags: JSON.stringify(normalizedTags),
+        images: JSON.stringify(normalizedImages),
         author: {
           connect: { email: session.user.email },
         },

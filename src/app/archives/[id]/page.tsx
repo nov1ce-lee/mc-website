@@ -1,11 +1,13 @@
-import { notFound } from "next/navigation";
-import Navbar from "@/components/layout/Navbar";
-import { prisma } from "@/lib/prisma";
-import { MapPin, Calendar, User, MessageSquare, Edit, Trash2, Share2, Heart } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { Calendar, Edit, Heart, MapPin, MessageSquare, Share2, Trash2, User } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
 import CommentSection from "@/components/archive/CommentSection";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { parseStringArray } from "@/lib/archive";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 interface ArchivePageProps {
   params: Promise<{
@@ -16,7 +18,7 @@ interface ArchivePageProps {
 export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
-  
+
   const archive = await prisma.archive.findUnique({
     where: { id },
     include: {
@@ -49,45 +51,45 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
   }
 
   const isAuthor = session?.user?.id === archive.authorId;
-  const canEdit = isAuthor || session?.user?.role === "ADMIN";
+  const canEdit =
+    isAuthor || session?.user?.role === "ADMIN" || session?.user?.role === "OWNER";
+  const images = parseStringArray(archive.images);
+  const tags = parseStringArray(archive.tags);
 
   return (
     <main className="min-h-screen bg-slate-50">
       <Navbar />
-      
+
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* 返回按钮 */}
         <div className="mb-6">
           <Link
             href="/archives"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-[#2D932D] transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-[#2D932D]"
           >
-            ← 返回档案列表
+            返回档案列表
           </Link>
         </div>
 
-        {/* 档案详情卡片 */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
-          {/* 图片区域 */}
-          <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/80 rounded-2xl mb-4 shadow-lg">
-                  <MapPin className="h-8 w-8 text-[#2D932D]" />
+        <div className="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200">
+            {images.length > 0 ? (
+              <img src={images[0]} alt={archive.title} className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/80 shadow-lg">
+                    <MapPin className="h-8 w-8 text-[#2D932D]" />
+                  </div>
+                  <p className="font-medium text-slate-600">暂无图片</p>
                 </div>
-                <p className="text-slate-600 font-medium">暂无图片</p>
-                <p className="text-sm text-slate-500 mt-1">上传功能开发中</p>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="p-8">
-            {/* 标题和操作按钮 */}
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+            <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-start">
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-slate-900 font-mono mb-2">
-                  {archive.title}
-                </h1>
+                <h1 className="mb-2 font-mono text-3xl font-bold text-slate-900">{archive.title}</h1>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
@@ -103,69 +105,80 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 {canEdit && (
                   <>
                     <Link
                       href={`/archives/${archive.id}/edit`}
-                      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 hover:text-[#2D932D] hover:bg-slate-100 transition-colors rounded-lg border border-slate-200"
+                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#2D932D]"
                     >
                       <Edit className="h-4 w-4" />
                       编辑
                     </Link>
-                    <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors rounded-lg border border-red-200">
+                    <button className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700">
                       <Trash2 className="h-4 w-4" />
                       删除
                     </button>
                   </>
                 )}
-                <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 hover:text-[#2D932D] hover:bg-slate-100 transition-colors rounded-lg border border-slate-200">
+
+                <button className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#2D932D]">
                   <Share2 className="h-4 w-4" />
                   分享
                 </button>
-                <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 hover:text-red-500 hover:bg-red-50 transition-colors rounded-lg border border-slate-200">
+                <button className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-red-50 hover:text-red-500">
                   <Heart className="h-4 w-4" />
                   收藏
                 </button>
               </div>
             </div>
 
-            {/* 坐标信息 */}
+            {images.length > 1 && (
+              <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {images.slice(1).map((image, index) => (
+                  <div
+                    key={`${image}-${index}`}
+                    className="aspect-video overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
+                  >
+                    <img
+                      src={image}
+                      alt={`${archive.title}-${index + 2}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-[#2D932D]" />
                 <h2 className="text-lg font-bold text-slate-900">坐标位置</h2>
               </div>
-              <div className="bg-slate-50 rounded-lg border border-slate-200 p-4">
-                <div className="font-mono text-lg font-bold text-slate-900">
-                  {archive.coordinates}
-                </div>
-                <p className="text-sm text-slate-600 mt-2">
-                  在游戏中输入此坐标即可前往查看
-                </p>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="font-mono text-lg font-bold text-slate-900">{archive.coordinates}</div>
+                <p className="mt-2 text-sm text-slate-600">复制坐标后可在游戏内快速前往查看。</p>
               </div>
             </div>
 
-            {/* 描述内容 */}
             <div className="mb-8">
-              <h2 className="text-lg font-bold text-slate-900 mb-4">详细描述</h2>
-              <div className="prose prose-slate max-w-none">
-                <div className="whitespace-pre-wrap text-slate-700 leading-relaxed">
+              <h2 className="mb-4 text-lg font-bold text-slate-900">详细描述</h2>
+              <div className="max-w-none">
+                <div className="whitespace-pre-wrap leading-relaxed text-slate-700">
                   {archive.description}
                 </div>
               </div>
             </div>
 
-            {/* 标签 */}
-            {archive.tags && (() => { try { const tags = JSON.parse(archive.tags); return tags.length > 0; } catch { return false; } })() && (
+            {tags.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-lg font-bold text-slate-900 mb-4">标签</h2>
+                <h2 className="mb-4 text-lg font-bold text-slate-900">标签</h2>
                 <div className="flex flex-wrap gap-2">
-                  {(() => { try { return JSON.parse(archive.tags); } catch { return []; } })().map((tag: string, index: number) => (
+                  {tags.map((tag, index) => (
                     <span
-                      key={index}
-                      className="px-3 py-1 bg-slate-100 text-slate-700 text-sm font-medium rounded-full border border-slate-200"
+                      key={`${tag}-${index}`}
+                      className="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700"
                     >
                       {tag}
                     </span>
@@ -174,18 +187,17 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
               </div>
             )}
 
-            {/* 作者信息 */}
             <div className="border-t border-slate-200 pt-8">
               <div className="flex items-center gap-4">
                 <img
-                  src={`https://mc-heads.net/avatar/${archive.author.name || "steve"}/64`}
+                  src={resolveAvatarUrl(archive.author.image, archive.author.name, 64)}
                   alt={archive.author.name || "用户"}
                   className="h-16 w-16 rounded-xl border-2 border-white shadow-sm"
                 />
                 <div>
                   <h3 className="font-bold text-slate-900">作者</h3>
                   <p className="text-slate-600">{archive.author.name}</p>
-                  <p className="text-sm text-slate-500 mt-1">
+                  <p className="mt-1 text-sm text-slate-500">
                     创建于 {new Date(archive.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -194,11 +206,11 @@ export default async function ArchiveDetailPage({ params }: ArchivePageProps) {
           </div>
         </div>
 
-        <CommentSection 
-          archiveId={archive.id} 
-          comments={archive.comments.map(c => ({
-            ...c,
-            createdAt: c.createdAt.toISOString(),
+        <CommentSection
+          archiveId={archive.id}
+          comments={archive.comments.map((comment) => ({
+            ...comment,
+            createdAt: comment.createdAt.toISOString(),
           }))}
           session={session}
         />

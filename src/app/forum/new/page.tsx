@@ -52,7 +52,7 @@ export default function NewForumPostPage() {
         const data = await response.json();
         setError(data.error || "发布失败");
       }
-    } catch (error) {
+    } catch {
       setError("发布时发生错误");
     } finally {
       setLoading(false);

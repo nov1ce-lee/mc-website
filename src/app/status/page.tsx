@@ -1,14 +1,19 @@
 "use client";
 
 import useSWR from "swr";
-import axios from "axios";
 import Navbar from "@/components/layout/Navbar";
 import { Server, Users, Activity, Clock, Wifi, WifiOff, RefreshCw, Gamepad2 } from "lucide-react";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("request failed");
+  }
+  return response.json();
+};
 
 export default function StatusPage() {
-  const { data, error, isLoading, mutate } = useSWR("/api/mc/status", fetcher, {
+  const { data, isLoading, mutate } = useSWR("/api/mc/status", fetcher, {
     refreshInterval: 30000,
   });
   const { data: addressData } = useSWR("/api/mc/address", fetcher);

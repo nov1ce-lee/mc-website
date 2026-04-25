@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { Pickaxe, LogOut, Menu, Shield } from "lucide-react";
+import { Pickaxe, LogOut, Shield } from "lucide-react";
 import LoginButton from "@/components/auth/LoginButton";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -51,7 +52,7 @@ export default function Navbar() {
                 className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition-colors"
               >
                 <img
-                  src={`https://mc-heads.net/avatar/${session.user?.name || "steve"}/24`}
+                  src={resolveAvatarUrl(session.user?.image, session.user?.name, 24)}
                   alt="avatar"
                   className="h-6 w-6 rounded-sm shadow-sm"
                 />

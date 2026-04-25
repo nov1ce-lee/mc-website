@@ -10,7 +10,7 @@ import Link from "next/link";
 interface MojangProfile {
   name: string;
   uuid: string;
-  skinUrl: string;
+  avatarUrl: string;
 }
 
 export default function RegisterPage() {
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                 <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
                   <div className="flex items-center gap-4">
                     <img
-                      src={`https://mc-heads.net/avatar/${mojangProfile.name}/64`}
+                      src={mojangProfile.avatarUrl}
                       alt={mojangProfile.name}
                       className="h-14 w-14 rounded-lg border-2 border-green-300 shadow-sm"
                     />

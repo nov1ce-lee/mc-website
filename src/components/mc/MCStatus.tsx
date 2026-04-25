@@ -1,10 +1,15 @@
 "use client";
 
 import useSWR from "swr";
-import axios from "axios";
 import { Users, Server, Activity } from "lucide-react";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("request failed");
+  }
+  return response.json();
+};
 
 export default function MCStatus() {
   const { data, error, isLoading } = useSWR("/api/mc/status", fetcher, {
