@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getArchiveUploadDirectory } from "@/lib/uploads";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MIME_TO_EXTENSION: Record<string, string> = {
@@ -11,7 +12,6 @@ const MIME_TO_EXTENSION: Record<string, string> = {
   "image/png": "png",
   "image/webp": "webp",
 };
-const DEFAULT_UPLOADS_DIRECTORY = join(process.cwd(), "public", "uploads", "archives");
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File is too large" }, { status: 400 });
     }
 
-    const uploadsDirectory = process.env.UPLOAD_DIR || DEFAULT_UPLOADS_DIRECTORY;
+    const uploadsDirectory = getArchiveUploadDirectory();
     await mkdir(uploadsDirectory, { recursive: true });
 
     const extension = MIME_TO_EXTENSION[file.type];
