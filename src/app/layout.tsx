@@ -14,13 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "坍塌服 - Minecraft 生存服务器",
-  description: "坍塌服 Minecraft 生存服务器官方网站",
-  icons: {
-    icon: "/site-logo.svg",
-    shortcut: "/site-logo.svg",
-    apple: "/site-logo.svg",
+  title: {
+    default: "坩埚服 | Minecraft 生存服务器",
+    template: "%s | 坩埚服",
   },
+  description: "坩埚服 Minecraft 生存服网站",
 };
 
 export default function RootLayout({
