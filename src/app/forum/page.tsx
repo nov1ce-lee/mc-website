@@ -75,7 +75,7 @@ export default function ForumPage() {
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
             <h1 className="font-mono text-3xl font-bold text-slate-900">群友唠嗑区</h1>
-            <p className="mt-2 text-slate-600">服务器里的讨论区，聊建筑、机器和日常都可以。</p>
+            <p className="mt-2 text-slate-600">服务器里的讨论区，聊建筑、机器和日常都可以</p>
           </div>
           <Link
             href="/forum/new"

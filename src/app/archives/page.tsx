@@ -101,7 +101,7 @@ export default async function ArchivesPage({ searchParams }: ArchivesPageProps) 
           <div>
             <h1 className="font-mono text-3xl font-bold text-slate-900">建筑与机器档案</h1>
             <p className="mt-2 text-slate-600">
-              记录服务器里的建筑、机器、农场与重要坐标，并支持按分类、标签和关键词筛选。
+              记录服务器里的建筑、机器、农场与重要坐标，并支持按分类、标签和关键词筛选
             </p>
           </div>
 

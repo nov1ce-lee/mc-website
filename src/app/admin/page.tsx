@@ -251,7 +251,7 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="font-mono text-3xl font-bold text-slate-900">管理后台</h1>
-            <p className="text-slate-600">管理用户、档案和评论。</p>
+            <p className="text-slate-600">管理用户、档案和评论</p>
           </div>
         </div>
 

@@ -47,7 +47,7 @@ export default function Home() {
               欢迎来到 <span className="text-[#2D932D]">坩埚服</span>
             </h1>
             <p className="mt-6 text-lg leading-8 text-slate-600">
-              一群朋友的 Minecraft 小窝，记录建筑、聊聊红石、分享生存日常。
+              一群朋友的 Minecraft 小窝，在这里记录建筑和红石，分享生存日常
             </p>
             {isLoggedIn ? (
               <div className="mt-10 flex items-center justify-center gap-x-6">
@@ -95,17 +95,17 @@ export default function Home() {
             <FeatureCard
               icon={<Shield className="h-6 w-6 text-[#2D932D]" />}
               title="正版验证"
-              description="绑定你的 Minecraft 正版账号，冒牌货进不来~"
+              description="绑定你的 Minecraft 正版账号，获取你的皮肤头像，后续会加入白名单功能"
             />
             <FeatureCard
               icon={<Map className="h-6 w-6 text-[#00AAAA]" />}
               title="建筑与坐标"
-              description="记录服里每一个牛掰建筑和生电机器，带坐标不迷路。"
+              description="记录服里每一个建筑和生电机器的图像和准确地点，带坐标不迷路"
             />
             <FeatureCard
               icon={<Zap className="h-6 w-6 text-amber-500" />}
               title="实时状态"
-              description="随时瞄一眼服务器状态，看看在线人数和 TPS。"
+              description="随时瞄一眼服务器状态，看看在线人数"
             />
           </div>
         </div>
