@@ -14,8 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "坩埚服 - 生存服务器",
-  description: "坩埚服 Minecraft 生存服务器官方网站",
+  title: "坍塌服 - Minecraft 生存服务器",
+  description: "坍塌服 Minecraft 生存服务器官方网站",
+  icons: {
+    icon: "/site-logo.svg",
+    shortcut: "/site-logo.svg",
+    apple: "/site-logo.svg",
+  },
 };
 
 export default function RootLayout({
@@ -24,9 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-50`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-50 antialiased`}
       >
         <AuthProvider>{children}</AuthProvider>
       </body>

@@ -1,3 +1,11 @@
+export const ARCHIVE_CATEGORY_OPTIONS = [
+  { value: "ALL", label: "全部" },
+  { value: "BUILDING", label: "建筑" },
+  { value: "MACHINE", label: "机器" },
+  { value: "FARM", label: "农场" },
+  { value: "OTHERS", label: "其他" },
+] as const;
+
 export function parseStringArray(value: string | null | undefined): string[] {
   if (!value) {
     return [];
