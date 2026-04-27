@@ -7,6 +7,8 @@ const protectedPaths = [
   "/profile",
   "/admin",
   "/status",
+  "/map",
+  "/map-view",
 ];
 
 function isProtectedPath(pathname: string): boolean {
